@@ -11,6 +11,7 @@ __status__ = "Production"
 from flask import Flask, render_template, request, abort, Response, redirect
 from urllib.parse import urlsplit
 from requests import get
+from os.path import exists
 import configparser
 
 
@@ -26,17 +27,17 @@ API_KEY = None #DO NOT SET API_KEY here. Set it in the config.ini
 
 @app.route('/<path:url>', methods=['GET'])
 def proxy_singed(url):
-"""
-    Receives the incoming requests, and builds the RiotGames URL for the
-    outgoing comms.
+    """
+        Receives the incoming requests, and builds the RiotGames URL for the
+        outgoing comms.
 
-    Args:
-        url: The incoming URL.
-    Returns:
-        the HTML response from the outgoing request that we issue.
-    Raises:
-        abort(403): we will issue an HTTP 403 code if appropriate.
-"""
+        Args:
+            url: The incoming URL.
+        Returns:
+            the HTML response from the outgoing request that we issue.
+        Raises:
+            abort(403): we will issue an HTTP 403 code if appropriate.
+    """
     if "favicon.ico" in url:
         abort(403)
     endpoint_url = build_remote_url(url, request.query_string)
@@ -52,31 +53,31 @@ def proxy_singed(url):
 
 @app.route('/', methods=['GET'])
 def proxy_root():
-"""
-    Handles requests for the document root.
-    We have a basic README HTML document that we'll serve up.
+    """
+        Handles requests for the document root.
+        We have a basic README HTML document that we'll serve up.
 
-    Returns:
-        the HTML for the index.html template.
-"""
+        Returns:
+            the HTML for the index.html template.
+    """
     print("Requested root - serving index")
     return render_template('index.html')
 
 
 def build_remote_url(url, query_string):
-"""
-    Takes the incoming URL, validates it using the whitelist and then
-    constructs the outgoing URL with the API key.
+    """
+        Takes the incoming URL, validates it using the whitelist and then
+        constructs the outgoing URL with the API key.
 
-    Args:
-        url: The incoming URL to be used for outgoing URL construction.
-        query_string: the GET query string. We will use this to build the API
-        key parameter in appropriately.
-    Returns:
-        the riotgames API url for the request
-    Raises:
-        abort(403): we will issue an HTTP 403 code if appropriate.
-"""
+        Args:
+            url: The incoming URL to be used for outgoing URL construction.
+            query_string: the GET query string. We will use this to build the API
+            key parameter in appropriately.
+        Returns:
+            the riotgames API url for the request
+        Raises:
+            abort(403): we will issue an HTTP 403 code if appropriate.
+    """
     url = 'https://%s' % url
     # Check if the host is whitelisted.
     if is_whitelisted(url):
@@ -94,16 +95,16 @@ def build_remote_url(url, query_string):
 
 
 def is_whitelisted(url):
-"""
-    Deconstructs the URL using `urlsplit` to determine if the domain is in
-    our whitelist.
+    """
+        Deconstructs the URL using `urlsplit` to determine if the domain is in
+        our whitelist.
 
-    Args:
-        url: The incoming URL to be used for validation
-    Returns:
-        either `True` or `False`, depending on whether or not `url` is
-        whitelisted
-"""
+        Args:
+            url: The incoming URL to be used for validation
+        Returns:
+            either `True` or `False`, depending on whether or not `url` is
+            whitelisted
+    """
     base_url = urlsplit(url).netloc
     return base_url in set(WHITELIST)
 
@@ -111,6 +112,8 @@ def is_whitelisted(url):
 if __name__ == 'Singed':
     #Load the config from disk
     config = configparser.ConfigParser()
+    if not exists('config.ini'):
+        exit("Please make sure you have created the config.ini file")
     config.read('config.ini')
     #Check port is set, otherwise use 9090
     port_number = 9090
