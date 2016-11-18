@@ -13,15 +13,9 @@ There are only a couple of requirements:-
 - Python `requests` module
 
 ## Use case:
-Requests come in like so:
-`https://<your_domain>/<some_api_domain/<query_string>`
+Proxy Singed is a super simple and lightweight Python Flask application to run between the RiotGames and RiotKit towers. 
 
-This will then be transformed into:
-`https://<riotgames_api_domain>/<query_string>&api_key=<KEY>`<br />
-
-The response will then be delivered to the original requester (I.e. the [RiotKit](https://git.hexplo.it/RiotKit/RiotKit) library).
-
-Once you host Proxy Singed somewhere, you'll need to set the URL in the [RiotKit](https://git.hexplo.it/RiotKit/RiotKit) config.
+Essentially, Proxy Singed will act as your middle man between the RiotKit framework and the Riot Games API. You'll host Proxy Singed somewhere on the web, provide the URL to RiotKit in your application, and Singed will make sure all traffic lands at Riot with your API key.
 
 ## Usage
 1. Rename [`config.example.ini`](config.example.ini) to `config.ini` and set your Riot Games API key.
