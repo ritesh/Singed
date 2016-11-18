@@ -18,7 +18,18 @@ import configparser
 #Globals
 config = None
 app = Flask(__name__.split('.')[0])
-WHITELIST = [   "euw.api.pvp.net",
+WHITELIST = [   "br.api.pvp.net",
+                "eune.api.pvp.net",
+                "euw.api.pvp.net",
+                "jp.api.pvp.net",
+                "kr.api.pvp.net",
+                "lan.api.pvp.net",
+                "las.api.pvp.net",
+                "na.api.pvp.net",
+                "oce.api.pvp.net",
+                "tr.api.pvp.net",
+                "ru.api.pvp.net",
+                "pbe.api.pvp.net",
                 "global.api.pvp.net"
                 ]
 app.config.update(TEMPLATES_AUTO_RELOAD=True)
