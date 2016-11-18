@@ -1,5 +1,7 @@
 # Proxy Singed
 
+[![Twitter](https://img.shields.io/badge/twitter-@Hexploitable-blue.svg?style=flat)](http://twitter.com/Hexploitable)
+
 ![Singed](https://ddragon.leagueoflegends.com/cdn/6.22.1/img/champion/Singed.png)
 
 Python web service (super basic), to act as middleware between riot games and RiotKit. 
