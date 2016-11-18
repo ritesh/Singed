@@ -4,6 +4,12 @@
 
 Python web service (super basic), to act as middleware between riot games and RiotKit. 
 
+## Requirements
+There are only a couple of requirements:-
+- A flavour of Python 3
+- Python `flask` module
+- Python `requests` module
+
 ## Use case:
 Requests come in like so:
 `https://<your_domain>/<some_api_domain/<query_string>`
