@@ -1,29 +1,25 @@
-# Singed
+# Proxy Singed
 
 ![Singed](https://ddragon.leagueoflegends.com/cdn/6.22.1/img/champion/Singed.png)
 
 Python web service (super basic), to act as middleware between riot games and RiotKit. 
 
-1. At startup, using the API key, fetch and construct all the valid URLS for the riot API.
-2. These domains will become whitelisted and will also be used for validation.
-	1. `singed.riotkit.xyz/domain_list`
-3. The whitelist will be communicated to the library upon request.
+## Use case:
+Requests come in like so:
+`https://<your_domain>/<some_api_domain/<query_string>`
 
-Requests will come in like so:
-`singed.riotkit.xyz/<some_api_domain/<query_string>`
-
-Singed will be responsible for validation of everything after `.xyz/`.
 This will then be transformed into:
-`https://<some_api_domain/<query_string>+api_key=<KEY>`
-The request will be issued and returned back to the requester (library).
+`https://<riotgames_api_domain>/<query_string>&api_key=<KEY>`<br />
 
-The url in this case is `singed.riotkit.xyz` but will be a configuration value in the library. Singed will be useable for CI testing throughout development with my development API key.
+The response will then be delivered to the original requester (I.e. the [RiotKit](https://git.hexplo.it/RiotKit/RiotKit) library).
 
-# Usage
-1. Place your API key in the source. (TODO - move to config)
-2. Run Singed like so:
+Once you host Proxy Singed somewhere, you'll need to set the URL in the [RiotKit](https://git.hexplo.it/RiotKit/RiotKit) config.
 
+## Usage
+1. Rename [`config.example.ini`](config.example.ini) to `config.ini` and set your Riot Games API key.
+2. Now run Singed like shown below: 
 ```
 $ export FLASK_APP=Singed.py
 $ python3.5 -m flask run
 ```
+3. You will then need to set up nginx or Apache2 as the reverse proxy to handle port redirection/SSL etc.
