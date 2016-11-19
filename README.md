@@ -1,6 +1,7 @@
 # Proxy Singed
 
 [![Twitter](https://img.shields.io/badge/twitter-@Hexploitable-blue.svg?style=flat)](http://twitter.com/Hexploitable)
+[![GitHub version](https://badge.fury.io/gh/RiotKit%2FSinged.svg)](https://badge.fury.io/gh/RiotKit%2FSinged)
 
 ![Singed](https://ddragon.leagueoflegends.com/cdn/6.22.1/img/champion/Singed.png)
 
