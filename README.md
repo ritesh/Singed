@@ -3,6 +3,7 @@
 [![Twitter](https://img.shields.io/badge/twitter-@Hexploitable-0099FF.svg?style=flat)](http://twitter.com/Hexploitable)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-FF0000.svg?style=flat)](https://github.com/RiotKit/Singed/blob/master/LICENSE)
 [![GitHub version](https://badge.fury.io/gh/RiotKit%2FSinged.svg)](https://badge.fury.io/gh/RiotKit%2FSinged)
+[![Discord][discord-badge]][discord]
 
 ![Singed](https://ddragon.leagueoflegends.com/cdn/6.22.1/img/champion/Singed.png)
 
@@ -27,3 +28,6 @@ $ export FLASK_APP=Singed.py
 $ python3.5 -m flask run
 ```
 3. You will then need to set up nginx or Apache2 as the reverse proxy to handle port redirection/SSL etc.
+
+[discord-badge]: https://img.shields.io/badge/Discord-join%20chat%20%E2%86%92-738bd7.svg?style=flat&label=discord
+[discord]: https://discord.gg/KRNsGRF
