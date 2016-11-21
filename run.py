@@ -1,5 +1,4 @@
 from app import *
-from json import load
 from os.path import exists
 
 
