@@ -6,18 +6,15 @@ __maintainer__ = "Grant Douglas"
 __email__ = "me@hexplo.it"
 __status__ = "Production"
 
-
 #Imports
 from flask import Flask, render_template, request, abort, Response, redirect
 from urllib.parse import urlsplit
 from requests import get
 from os.path import exists
-import configparser
+from app import app
 
 
 #Globals
-config = None
-app = Flask(__name__.split('.')[0])
 WHITELIST = [   "br.api.pvp.net",
                 "eune.api.pvp.net",
                 "euw.api.pvp.net",
@@ -32,8 +29,6 @@ WHITELIST = [   "br.api.pvp.net",
                 "pbe.api.pvp.net",
                 "global.api.pvp.net"
                 ]
-app.config.update(TEMPLATES_AUTO_RELOAD=True)
-API_KEY = None #DO NOT SET API_KEY here. Set it in the config.ini
 
 
 @app.route('/<path:url>', methods=['GET'])
@@ -90,14 +85,19 @@ def build_remote_url(url, query_string):
             abort(403): we will issue an HTTP 403 code if appropriate.
     """
     url = 'https://%s' % url
+
+    #Ensure the URL ends with /
+    if not url.endswith('/'):
+        url = url + '/'
+
     # Check if the host is whitelisted.
     if is_whitelisted(url):
         query = str(query_string, 'utf-8')
         # Stitch in API key
         if query:
-            url = "%s?%s&api_key=%s" % (url, query, API_KEY)
+            url = "%s?%s&api_key=%s" % (url, query, app.config['API_KEY'])
         else:
-            url = url + "?api_key=%s" % API_KEY
+            url = url + "?api_key=%s" % app.config['API_KEY']
     else:
         print("URL is not approved: ", url)
         abort(403)
@@ -118,23 +118,3 @@ def is_whitelisted(url):
     """
     base_url = urlsplit(url).netloc
     return base_url in set(WHITELIST)
-
-
-if __name__ == 'Singed':
-    #Load the config from disk
-    config = configparser.ConfigParser()
-    if not exists('config.ini'):
-        exit("Please make sure you have created the config.ini file")
-    config.read('config.ini')
-    #Check port is set, otherwise use 9090
-    port_number = 9090
-    cfg_port = int(config['Singed']['HOST_PORT'])
-    if cfg_port:
-        port_number = cfg_port
-    #Check API_key is set
-    API_KEY = config['Singed']['API_KEY']
-    if API_KEY and len(API_KEY) > 5:
-        print("API Key loaded: %s%s" % ("*" * (len(API_KEY)-7), API_KEY[-6:]))
-        app.run(host='127.0.0.1', port=port_number)
-    else:
-        exit("Please provide your RiotGames API key in the config.ini file")
