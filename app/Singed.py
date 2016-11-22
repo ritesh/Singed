@@ -8,7 +8,7 @@ __status__ = "Production"
 
 #Imports
 from flask import Flask, render_template, request, abort, Response, redirect
-from urllib.parse import urlsplit, unquote
+from urllib.parse import urlsplit
 from requests import get
 from os.path import exists
 from app import app
@@ -44,7 +44,6 @@ def proxy_singed(url):
         Raises:
             abort(403): we will issue an HTTP 403 code if appropriate.
     """
-    url = unquote(unquote(url))
     if "favicon.ico" in url:
         abort(403)
     endpoint_url = build_remote_url(url, request.query_string)
@@ -87,20 +86,17 @@ def build_remote_url(url, query_string):
     """
     url = 'https://%s' % url
 
+    if not url.endswith('/'):
+        url = url + '/'
+
     # Check if the host is whitelisted.
     if is_whitelisted(url):
         query = str(query_string, 'utf-8')
         # Stitch in API key
         if query:
-            if "?" in query:
-                url = "%s%s&api_key=%s" % (url, query, app.config['API_KEY'])
-            else:
-                url = "%s?%s&api_key=%s" % (url, query, app.config['API_KEY'])
+            url = "%s?%s&api_key=%s" % (url, query, app.config['API_KEY'])
         else:
-            if "?" in url:
-                url = url + "&api_key=%s" % app.config['API_KEY']
-            else:
-                url = url + "?api_key=%s" % app.config['API_KEY']
+            url = url + "?api_key=%s" % app.config['API_KEY']
     else:
         print("URL is not approved: ", url)
         abort(403)

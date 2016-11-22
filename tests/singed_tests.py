@@ -61,7 +61,12 @@ class SingedTestCases(unittest.TestCase):
 
         for url in good_urls:
             new_url = build_remote_url(url, "".encode('utf-8'))
-            assert new_url == "https://%s?api_key=%s" % (url,
+            if url.endswith("/"):
+                assert new_url == "https://%s?api_key=%s" % (url,
+                                                          app.config['API_KEY']
+                                                          )
+            else:
+                assert new_url == "https://%s/?api_key=%s" % (url,
                                                           app.config['API_KEY']
                                                           )
 
@@ -69,10 +74,16 @@ class SingedTestCases(unittest.TestCase):
             query_string = "foobar=Task&elon=musk"
             new_url = build_remote_url(url, query_string.encode('utf-8'))
 
-            assert new_url == "https://%s?%s&api_key=%s" % (url,
+            if url.endswith("/"):
+                assert new_url == "https://%s?%s&api_key=%s" % (url,
                                                                query_string,
                                                           app.config['API_KEY']
                                                           )
+            else:
+                assert new_url == "https://%s/?%s&api_key=%s" % (url,
+                                                                 query_string,
+                                                          app.config['API_KEY']
+                                                          ), print(new_url)
         for url in bad_urls:
             with pytest.raises(Exception) as err:
                 new_url = build_remote_url(url, "".encode('utf-8'))
